@@ -1,0 +1,7 @@
+# depslib dependency file v1.0
+1591632096 source:c:\users\bruno\desktop\campo minado\campominado\campo minado\main.cpp
+	<iostream>
+	<algorithm>
+	<cstdlib>
+	<ctime>
+
