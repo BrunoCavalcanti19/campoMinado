@@ -2,119 +2,55 @@
 #include <algorithm>
 #include <cstdlib>
 #include <ctime>
-
+#include "Board.h"
+#include "Menu.h"
 using namespace std;
-unsigned seed = time(NULL);
-int largura,altura,numero_bombas,altura_random,largura_random,contador;
+
 
 int main()
 {
+    Menu menu;
+    menu.inicio();
     // função utilizada para gerar números aleatórios
-    srand(seed);
-
-    cout<<"Diga-nos a largura do seu tabuleiro\n";
-    cin>> largura;
+    //srand(seed);
+/*do{
     cout<<"Diga-nos a altura do seu tabuleiro\n";
-    cin>>altura;
+    cin>> altura_player;
+    if(cin.fail())
+        {
+         cout << "trying to break the game? better luck next time!\n";
+         cin.clear();
+         cin.ignore(100, '\n');
+        }
+    cout<<"Diga-nos a largura do seu tabuleiro\n";
+    cin>>largura_player;
+    if(cin.fail())
+        {
+         cout << "trying to break the game? better luck next time!\n";
+         cin.clear();
+         cin.ignore(100, '\n');
+        }
     cout<<"Diga-nos a quantidade de bombas\n";
-    cin>>numero_bombas;
-
-    int matriz[largura][altura];
-
-    //Laço que pega todos os elementos da matriz e transforma em 0
-    for(int i = 0;i<largura;i++){
-        for(int j = 0;j<altura;j++)
-            {
-              matriz[i][j]=0;
-            }
-    }
-
-   //Coloca as bombas em posições aleatórias da matriz, fazendo uso da função rand()
-    do
-    {
-
-        largura_random = rand()%largura; // atribui a variável largura_random um valor aleatório entre 0 e a largura total
-        altura_random = rand()%altura; // atribui a variável altura_random um valor aleatório entre 0 e a altura total
-        if(matriz[largura_random][altura_random]==9) // condição para checar se a casa já possui uma bomba
-            {
-                largura_random = rand()%largura;
-                altura_random = rand()%altura;
-
-            }else{
-                matriz[largura_random][altura_random] =9;
-                numero_bombas--;
-            }
-    }while(numero_bombas>0);
-
-    //Laço para adicionar as dicas ao tabuleiro, ele checa as casas ao redor da escolhida, caso a casa proxima tenha uma bomba o valor da casa incrementa em 1
-    for(int i = 0; i<largura;i++)
+    cin>>numero_bombas_player;
+    if(cin.fail())
         {
-         for(int j = 0; j<altura;j++)
-            {
-              if(matriz[i][j]!=9)
-                {
-
-                  if(matriz[i-1][j-1] == 9 && (i-1) >= 0 && (j-1) >= 0) //ao checar a casa ele também limita ela a posições existentes no tabuleiro
-                    {
-                      matriz[i][j]++;
-
-                    }
-                  if(matriz[i-1][j] == 9 && (i-1) >= 0)
-                    {
-                      matriz[i][j]++;
-
-                    }
-                    if(matriz[i-1][j+1] == 9 && (i-1) >= 0  && (j+1)<altura )
-                    {
-                      matriz[i][j]++;
-
-                    }
-                    if(matriz[i][j-1] == 9 && (j-1) >= 0)
-                    {
-                      matriz[i][j]++;
-
-                    }
-                    if(matriz[i][j+1] == 9 && (j+1)<altura)
-                    {
-                      matriz[i][j]++;
-
-                    }
-                    if(matriz[i+1][j-1] == 9 && (i+1) < largura && (j-1) >= 0)
-                    {
-                      matriz[i][j]++;
-
-                    }
-                    if(matriz[i+1][j] == 9 && (i+1) < largura)
-                    {
-                      matriz[i][j]++;
-
-                    }
-                    if(matriz[i+1][j+1] == 9 && (i+1) < largura && (j+1)<altura)
-                    {
-                      matriz[i][j]++;
-
-                    }
-                }
-
-            }
+         cout << "trying to break the game? better luck next time!\n";
+         cin.clear();
+         cin.ignore(100, '\n');
         }
+}while(altura_player<2 || largura_player <2 || altura_player>30 || largura_player > 30 || numero_bombas_player<=0 ||numero_bombas_player>(altura_player*largura_player)-1);
+
+mineField.zera_Matriz((int)altura_player,(int)largura_player);
+mineField.coloca_Bombas((int)altura_player,(int)largura_player,(int)numero_bombas_player);
+mineField.coloca_Dicas((int)altura_player,(int)largura_player);
+mineField.gera_Tabuleiro((int)altura_player,(int)largura_player);
+
+*/
 
 
-   //Imprime o tabuleiro na tela
-   for(int i = 0; i< largura;i++)
-    {
-     for(int j=0;j<altura;j++)
-        {
-          if(matriz[i][j]==9) // Caso o valor seja 9 (número atribuido para bomba), ele coloca um X na tela
-             cout<<" X "<<" ";
-            }else
-            {
-              cout<< " " << matriz[i][j] <<" " << " "; // se não for 9 ele coloca o valor armazenado na posição (podendo ir de 0 a 8)
 
-            }
 
-        }
-     cout<<"\n";
-    }
+
+
 
 }
