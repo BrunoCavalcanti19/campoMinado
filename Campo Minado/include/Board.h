@@ -11,6 +11,9 @@ class Board
         void coloca_Bombas(int altura, int largura, int numero_bombas);
         void coloca_Dicas(int altura, int largura);
         void gera_Tabuleiro(int altura, int largura);
+        void generate_upperBoard(int altura, int largura);
+        void create_upperBoard(int altura,int largura);
+        void game_Board(int altura,int largura);
 
     protected:
 

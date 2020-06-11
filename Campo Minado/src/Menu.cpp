@@ -1,9 +1,10 @@
 #include "Menu.h"
 #include <iostream>
 #include "Board.h"
+#include <string>
 double opcao;
 char  voltar;
-double largura_player,altura_player,numero_bombas_player;
+double largura_player,altura_player,numero_bombas_player,linha,coluna,count_Casas;
 Board mineField;
 Menu::Menu()
 {
@@ -87,10 +88,36 @@ switch ((int)opcao)
         }
 }while(altura_player<2 || largura_player <2 || altura_player>30 || largura_player > 30 || numero_bombas_player<=0 ||numero_bombas_player>(altura_player*largura_player)-1);
 
+count_Casas = ((altura_player * largura_player) - numero_bombas_player);
+
 mineField.zera_Matriz((int)altura_player,(int)largura_player);
 mineField.coloca_Bombas((int)altura_player,(int)largura_player,(int)numero_bombas_player);
 mineField.coloca_Dicas((int)altura_player,(int)largura_player);
-mineField.gera_Tabuleiro((int)altura_player,(int)largura_player);
+mineField.generate_upperBoard((int)altura_player,(int)largura_player);
+mineField.create_upperBoard((int)altura_player,(int)largura_player);
+do{
+std::cout << "Nos diga a linha que quer jogar:\n";
+std::cin >> linha;
+if(std::cin.fail())
+        {
+         std::cout << "trying to break the game? better luck next time!\n";
+         std::cin.clear();
+         std::cin.ignore(100, '\n');
+        }
+std::cout << "Nos diga a coluna que quer jogar:\n";
+std::cin >> coluna;
+if(std::cin.fail())
+        {
+         std::cout << "trying to break the game? better luck next time!\n";
+         std::cin.clear();
+         std::cin.ignore(100, '\n');
+        }
+int x,y;
+x = linha -1;
+y = coluna -1;
+mineField.game_Board((int)x,(int)y);
+mineField.create_upperBoard((int)altura_player,(int)largura_player);
+}while(count_Casas > 0);
 break;
  case 2 :
         instrucoes();

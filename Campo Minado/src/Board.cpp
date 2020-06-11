@@ -2,8 +2,12 @@
 #include <cstdlib>
 #include <ctime>
 #include <iostream>
-int altura,largura,numero_bombas,altura_random,largura_random;
+#include <string>
+#include <stdlib.h>
+int altura,largura,numero_bombas,altura_random,largura_random,game_count,altura_total,largura_total;
 int matriz[30][30];
+int upper_Board[30][30];
+bool endGame = false;
 unsigned seed = time(NULL);
 Board::Board()
 {
@@ -19,18 +23,30 @@ void Board::zera_Matriz(int altura, int largura)
             }
     }
 }
+
+void Board::generate_upperBoard(int altura, int largura)
+{
+   for(int i = 0; i<altura;i++)
+    {
+      for(int j = 0; j<largura;j++)
+        {
+          upper_Board[i][j] = 12;
+        }
+    }
+
+}
 //Coloca as bombas em posições aleatórias da matriz, fazendo uso da função rand()
 void Board::coloca_Bombas(int altura, int largura, int numero_bombas)
 {
   srand(seed);
     do
     {
-        largura_random = rand()%largura; // atribui a variável largura_random um valor aleatório entre 0 e a largura total
-        altura_random = rand()%altura; // atribui a variável altura_random um valor aleatório entre 0 e a altura total
+        altura_random = rand()%altura; // atribui a variável largura_random um valor aleatório entre 0 e a largura total
+        largura_random = rand()%largura; // atribui a variável altura_random um valor aleatório entre 0 e a altura total
         if(matriz[altura_random][largura_random]==9) // condição para checar se a casa já possui uma bomba
             {
-                largura_random = rand()%largura;
                 altura_random = rand()%altura;
+                largura_random = rand()%largura;
 
             }else{
                 matriz[altura_random][largura_random] =9;
@@ -95,7 +111,7 @@ void Board::coloca_Dicas(int altura, int largura)
         }
 }
 //Imprime o tabuleiro na tela
-void Board::gera_Tabuleiro(int altura, int largura)
+/*void Board::gera_Tabuleiro(int altura, int largura)
 {
 for(int i = 0; i< altura;i++)
     {
@@ -112,8 +128,89 @@ for(int i = 0; i< altura;i++)
         }
        std::cout<<"\n";
     }
-}
+*/
 
+void Board::create_upperBoard(int altura,int largura)
+{
+  system("CLS");
+  for(int i = 0; i<altura;i++)
+    {
+     for(int j = 0; j<largura;j++)
+        {
+          if(upper_Board[i][j]==12){
+            std::cout << " - ";
+          }else if(upper_Board[i][j]==9)
+          {
+             std::cout <<" X ";
+
+          }
+
+          else{
+            std::cout<<" "<< upper_Board[i][j] <<" ";
+          }
+        }
+      std::cout << "\n";
+    }
+}
+void Board::game_Board(int altura,int largura)
+{
+
+   if(matriz[altura][largura] == 9)
+    {
+        upper_Board[altura][largura] = matriz[altura][largura];
+        std::cout << "You Lose!\n";
+
+     }else if(matriz[altura][largura] == 0)
+            {
+             upper_Board[altura][largura] = matriz[largura][altura];
+
+          //if((altura-1) >= 0 && (largura-1) >= 0) //ao checar a casa ele também limita ela a posições existentes no tabuleiro
+            // {
+               upper_Board[altura-1][largura-1] = matriz[altura-1][largura-1];
+
+           //  }
+         //  if((altura-1) >= 0)
+         //    {
+               upper_Board[altura-1][largura] = matriz[altura-1][largura];
+
+
+        //     }
+        //   if((altura-1) >= 0  && (largura+1)<largura_total)
+        //     {
+                upper_Board[altura-1][largura+1] = matriz[altura-1][largura+1];
+
+        //     }
+        //   if((largura-1) >= 0)
+        //     {
+                upper_Board[altura][largura-1] = matriz[altura][largura-1];
+
+         //    }
+         //  if((largura+1)<largura_total)
+          //    {
+                upper_Board[altura][largura+1] = matriz[altura][largura+1];
+
+         //     }
+         //  if((altura+1) <altura_total && (largura-1) >= 0)
+         //      {
+                  upper_Board[altura+1][largura-1] = matriz[altura+1][largura-1];
+
+        //       }
+        //   if((altura+1) <altura_total)
+        //      {
+                 upper_Board[altura+1][largura] = matriz[altura+1][largura];
+
+        //      }
+        //    if((altura+1) <altura_total && (largura+1)<largura_total)
+        //      {
+                upper_Board[altura+1][largura+1] = matriz[altura+1][largura+1];
+
+        //      }
+
+    }else{
+        upper_Board[altura][largura] = matriz[altura][largura];
+
+    }
+}
 
 Board::~Board()
 {

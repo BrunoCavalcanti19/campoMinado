@@ -5,26 +5,30 @@
 	<cstdlib>
 	<ctime>
 
-1591754096 source:c:\users\bruno\desktop\campo minado\campominado\campo minado\campominado\campo minado\src\board.cpp
+1591823386 source:c:\users\bruno\desktop\campo minado\campominado\campo minado\campominado\campo minado\src\board.cpp
 	"Board.h"
 	<cstdlib>
 	<ctime>
 	<iostream>
+	<string>
+	<stdlib.h>
 
-1591752062 c:\users\bruno\desktop\campo minado\campominado\campo minado\campominado\campo minado\include\board.h
+1591824088 c:\users\bruno\desktop\campo minado\campominado\campo minado\campominado\campo minado\include\board.h
 
-1591756729 source:c:\users\bruno\desktop\campo minado\campominado\campo minado\campominado\campo minado\src\menu.cpp
+1591822718 source:c:\users\bruno\desktop\campo minado\campominado\campo minado\campominado\campo minado\src\menu.cpp
 	"Menu.h"
 	<iostream>
 	"Board.h"
+	<string>
 
 1591755247 c:\users\bruno\desktop\campo minado\campominado\campo minado\campominado\campo minado\include\menu.h
 
-1591755400 source:c:\users\bruno\desktop\campo minado\campominado\campo minado\campominado\campo minado\main.cpp
+1591813964 source:c:\users\bruno\desktop\campo minado\campominado\campo minado\campominado\campo minado\main.cpp
 	<iostream>
 	<algorithm>
 	<cstdlib>
 	<ctime>
 	"Board.h"
 	"Menu.h"
+	<string>
 
