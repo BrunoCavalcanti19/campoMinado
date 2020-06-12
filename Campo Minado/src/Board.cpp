@@ -1,217 +1,272 @@
 #include "Board.h"
 #include <cstdlib>
+#include "Menu.h"
 #include <ctime>
 #include <iostream>
 #include <string>
 #include <stdlib.h>
-int altura,largura,numero_bombas,altura_random,largura_random,game_count,altura_total,largura_total;
+int altura,largura,numero_bombas,altura_random,largura_random,game_count,altura_total,largura_total,replay;
 int matriz[30][30];
 int upper_Board[30][30];
-bool endGame = false;
+int flag_check;
+Menu menu;
 unsigned seed = time(NULL);
 Board::Board()
 {
     //ctor
 }
-//Function that takes all elements in the 2D array and turns them into 0
+
+//Here Goes all the game logic//
+
+
+//Function that takes all elements in the bottom 2D array and turns them into 0
 void Board::zera_Matriz(int altura, int largura)
 {
-    for(int i = 0;i<altura;i++){
-        for(int j = 0;j<largura;j++)
-            {
-              matriz[i][j]=0;
-            }
+    for(int i = 0; i<altura; i++)
+    {
+        for(int j = 0; j<largura; j++)
+        {
+            matriz[i][j]=0;
+        }
     }
 }
-
+//Function that takes all the elements in the upper 2D array and turns them into 12
 void Board::generate_upperBoard(int altura, int largura)
 {
-   for(int i = 0; i<altura;i++)
+    for(int i = 0; i<altura; i++)
     {
-      for(int j = 0; j<largura;j++)
+        for(int j = 0; j<largura; j++)
         {
-          upper_Board[i][j] = 12;
+            upper_Board[i][j] = 12;
         }
     }
 
 }
-//Coloca as bombas em posições aleatórias da matriz, fazendo uso da função rand()
+//Insert the mines in random positions, using the rand() function
 void Board::coloca_Bombas(int altura, int largura, int numero_bombas)
 {
-  srand(seed);
+    srand(seed);//Function that generates a random number between 0 and the actual time
     do
     {
-        altura_random = rand()%altura; // atribui a variável largura_random um valor aleatório entre 0 e a largura total
-        largura_random = rand()%largura; // atribui a variável altura_random um valor aleatório entre 0 e a altura total
-        if(matriz[altura_random][largura_random]==9) // condição para checar se a casa já possui uma bomba
-            {
-                altura_random = rand()%altura;
-                largura_random = rand()%largura;
+        altura_random = rand()%altura; // Attributes a random value between 0 and max Height to the variable -> Using the srand(seed) number as key
+        largura_random = rand()%largura; // Attributes a random value between 0 and max Width to the variable -> Using the srand(seed) number as key
+        if(matriz[altura_random][largura_random]==9) // Condition to check if this spot is a mine, if true generates another random position
+        {
+            altura_random = rand()%altura;
+            largura_random = rand()%largura;
 
-            }else{
-                matriz[altura_random][largura_random] =9;
-                numero_bombas--;
-            }
-}while(numero_bombas>0);
+        }
+        else
+        {
+            matriz[altura_random][largura_random] =9;
+            numero_bombas--;
+        }
+    }
+    while(numero_bombas>0);
 
 }
-//Laço para adicionar as dicas ao tabuleiro, ele checa as casas ao redor da escolhida, caso a casa proxima tenha uma bomba o valor da casa incrementa em 1
+////Function to increment the hints in one if a mine is nearby
 void Board::coloca_Dicas(int altura, int largura)
 {
- for(int i = 0; i<altura;i++)
-        {
-         for(int j = 0; j<largura;j++)
-            {
-              if(matriz[i][j]!=9)
-                {
-
-                  if(matriz[i-1][j-1] == 9 && (i-1) >= 0 && (j-1) >= 0) //ao checar a casa ele também limita ela a posições existentes no tabuleiro
-                    {
-                      matriz[i][j]++;
-
-                    }
-                  if(matriz[i-1][j] == 9 && (i-1) >= 0)
-                    {
-                      matriz[i][j]++;
-
-                    }
-                    if(matriz[i-1][j+1] == 9 && (i-1) >= 0  && (j+1)<largura)
-                    {
-                      matriz[i][j]++;
-
-                    }
-                    if(matriz[i][j-1] == 9 && (j-1) >= 0)
-                    {
-                      matriz[i][j]++;
-
-                    }
-                    if(matriz[i][j+1] == 9 && (j+1)<largura)
-                    {
-                      matriz[i][j]++;
-
-                    }
-                    if(matriz[i+1][j-1] == 9 && (i+1) <altura && (j-1) >= 0)
-                    {
-                      matriz[i][j]++;
-
-                    }
-                    if(matriz[i+1][j] == 9 && (i+1) <altura)
-                    {
-                      matriz[i][j]++;
-
-                    }
-                    if(matriz[i+1][j+1] == 9 && (i+1) <altura && (j+1)<largura)
-                    {
-                      matriz[i][j]++;
-
-                    }
-                }
-
-            }
-        }
-}
-//Imprime o tabuleiro na tela
-/*void Board::gera_Tabuleiro(int altura, int largura)
-{
-for(int i = 0; i< altura;i++)
+    for(int i = 0; i<altura; i++)
     {
-     for(int j=0;j<largura;j++)
+        for(int j = 0; j<largura; j++)
         {
-          if(matriz[i][j]==9){ // Caso o valor seja 9 (número atribuido para bomba), ele coloca um X na tela
-              std::cout<<" X "<<" ";
-            }else
+            if(matriz[i][j]!=9)
             {
-              std::cout<< " " << matriz[i][j] <<" " << " "; // se não for 9 ele coloca o valor armazenado na posição (podendo ir de 0 a 8)
 
+                if(matriz[i-1][j-1] == 9 && (i-1) >= 0 && (j-1) >= 0) //Only check spots that are in the board
+                {
+                    matriz[i][j]++;
+
+                }
+                if(matriz[i-1][j] == 9 && (i-1) >= 0)
+                {
+                    matriz[i][j]++;
+
+                }
+                if(matriz[i-1][j+1] == 9 && (i-1) >= 0  && (j+1)<largura)
+                {
+                    matriz[i][j]++;
+
+                }
+                if(matriz[i][j-1] == 9 && (j-1) >= 0)
+                {
+                    matriz[i][j]++;
+
+                }
+                if(matriz[i][j+1] == 9 && (j+1)<largura)
+                {
+                    matriz[i][j]++;
+
+                }
+                if(matriz[i+1][j-1] == 9 && (i+1) <altura && (j-1) >= 0)
+                {
+                    matriz[i][j]++;
+
+                }
+                if(matriz[i+1][j] == 9 && (i+1) <altura)
+                {
+                    matriz[i][j]++;
+
+                }
+                if(matriz[i+1][j+1] == 9 && (i+1) <altura && (j+1)<largura)
+                {
+                    matriz[i][j]++;
+
+                }
             }
 
         }
-       std::cout<<"\n";
     }
-*/
+}
 
+//Function that check and show empty spaces
+void Board::empty_Space(int altura, int largura,int altura_total, int largura_total)
+{
+    int i,j;
+
+    for(i = altura-1; i <=altura + 1; i++) //It starts with the Upper Left position and end in the bottom right
+    {
+        if(i<0 || i>(altura_total-1)) //Only check spots that are in the gameBoard
+        {
+            continue;
+
+        }
+        for(j=largura-1; j<=largura+1; j++) //It starts with the Upper Left position and end in the bottom right
+        {
+            if(j<0 || j>(largura_total-1)||matriz[i][j]==-2) //Only check spots that are in the gameBoard and that aren't "open"
+            {
+                continue;
+
+            }
+
+            if(matriz[i][j]==0 && matriz[i][j]!=9) //Check the spot to see if it's an empty space. If true, calls the function again, until hit a hint
+            {
+
+                upper_Board[i][j]=0; //The screen shows an empty space
+                matriz[i][j]=-2; //The operation Array spot can no longer be verified
+                empty_Space(i,j,altura_total,largura_total);
+            }
+            if(matriz[i][j]>0 && matriz[i][j] <9)//Check the spot to see if it's a hint
+            {
+
+                upper_Board[i][j] = matriz[i][j];//The upper board receives the operation array value
+                matriz[i][j]=-2;//The operation Array spot can no longer be verified
+
+            }
+        }
+    }
+
+}
+//Function that shows the board screen
 void Board::create_upperBoard(int altura,int largura)
 {
-  system("CLS");
-  for(int i = 0; i<altura;i++)
+    system("CLS");
+    for(int i = 0; i<altura; i++)
     {
-     for(int j = 0; j<largura;j++)
+        for(int j = 0; j<largura; j++)
         {
-          if(upper_Board[i][j]==12){
-            std::cout << " - ";
-          }else if(upper_Board[i][j]==9)
-          {
-             std::cout <<" X ";
-
-          }
-
-          else{
-            std::cout<<" "<< upper_Board[i][j] <<" ";
-          }
-        }
-      std::cout << "\n";
-    }
-}
-void Board::game_Board(int altura,int largura)
-{
-
-   if(matriz[altura][largura] == 9)
-    {
-        upper_Board[altura][largura] = matriz[altura][largura];
-        std::cout << "You Lose!\n";
-
-     }else if(matriz[altura][largura] == 0)
+            if(upper_Board[i][j]==12)  //If the upper board position is a 12, it shows " - " on the screen
             {
-             upper_Board[altura][largura] = matriz[largura][altura];
+                std::cout << " - ";
+            }
+            else if(upper_Board[i][j]==9)  //If the upper board position is a 9, it shows " X " on the screen
+            {
+                std::cout <<" X ";
 
-          //if((altura-1) >= 0 && (largura-1) >= 0) //ao checar a casa ele também limita ela a posições existentes no tabuleiro
-            // {
-               upper_Board[altura-1][largura-1] = matriz[altura-1][largura-1];
+            }
+            else if(upper_Board[i][j]==13)
+            {
+                std::cout << " P ";
+            }
 
-           //  }
-         //  if((altura-1) >= 0)
-         //    {
-               upper_Board[altura-1][largura] = matriz[altura-1][largura];
+            else
+            {
+                std::cout<<" "<< upper_Board[i][j] <<" ";
+            }
+        }
+        std::cout << "\n";
+    }
+}
+void Board::game_Board(int altura,int largura,int flag_check, int altura_total, int largura_total)
+{
+    if(flag_check==1)
+    {
+        if(upper_Board[altura][largura]==12)
+        {
+            upper_Board[altura][largura]=13;
+        }
+        else if(upper_Board[altura][largura]==13)
+        {
+            upper_Board[altura][largura]=12;
+        }
+    }
+    if(flag_check==2)
+    {
+        if(matriz[altura][largura] == 9) //If the chosen spot is a mine, the game ends
 
+        {
+            upper_Board[altura][largura] = matriz[altura][largura];
+            system("CLS");
+            std::cout << "Stay with me, soldier!\n";
 
-        //     }
-        //   if((altura-1) >= 0  && (largura+1)<largura_total)
-        //     {
-                upper_Board[altura-1][largura+1] = matriz[altura-1][largura+1];
+            do
+            {
+                std::cout << "Play again?:\n 1 - Yes\n 2 - No\n";
+                std::cin >> replay;
+                if(std::cin.fail())
+                {
+                    std::cout << "trying to break me? this isn't funny \\(T-T)/ !\n";
+                    std::cin.clear();
+                    std::cin.ignore(100, '\n');
+                }
+            }
+            while(replay < 1 || replay >2);
+            switch(replay)
+            {
+            case 1 :
+                menu.first_screen();
+            case 2:
+                exit(1);
+            }
+        }
+        else if(matriz[altura][largura] == 0)   //If the chosen spot is a empty space it calls the function
+        {
 
-        //     }
-        //   if((largura-1) >= 0)
-        //     {
-                upper_Board[altura][largura-1] = matriz[altura][largura-1];
+            empty_Space(altura,largura,altura_total,largura_total);
 
-         //    }
-         //  if((largura+1)<largura_total)
-          //    {
-                upper_Board[altura][largura+1] = matriz[altura][largura+1];
-
-         //     }
-         //  if((altura+1) <altura_total && (largura-1) >= 0)
-         //      {
-                  upper_Board[altura+1][largura-1] = matriz[altura+1][largura-1];
-
-        //       }
-        //   if((altura+1) <altura_total)
-        //      {
-                 upper_Board[altura+1][largura] = matriz[altura+1][largura];
-
-        //      }
-        //    if((altura+1) <altura_total && (largura+1)<largura_total)
-        //      {
-                upper_Board[altura+1][largura+1] = matriz[altura+1][largura+1];
-
-        //      }
-
-    }else{
-        upper_Board[altura][largura] = matriz[altura][largura];
+        }
+        else if(matriz[altura][largura]!=-2)
+        {
+            upper_Board[altura][largura] = matriz[altura][largura]; //If it is a hint, shows the hint on the screen
+        }
 
     }
 }
-
+//Function to check the win condition
+int Board:: win_Condition(int altura, int largura, int numero_bombas)
+{
+    int count_bomb=0;
+    for(int i =0; i<altura; i++)
+    {
+        for(int j = 0; j<largura; j++)
+        {
+            if(upper_Board[i][j]==13 && matriz[i][j] == 9) //Every time the upperBoard spot is a Flag ,and the operation array is a bomb, the bomb counter increments 1
+            {
+                count_bomb++;
+            }
+        }
+    }
+    if(count_bomb == numero_bombas) //if the bomb counters is equal to the mines total, the win condition becomes true
+    {
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
+}
 Board::~Board()
 {
     //dtor

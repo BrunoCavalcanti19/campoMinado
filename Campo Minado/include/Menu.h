@@ -4,15 +4,15 @@
 
 class Menu
 {
-    public:
-        Menu();
-        void inicio();
-        void instrucoes();
-        virtual ~Menu();
+public:
+    Menu();
+    void first_screen();
+    void instructions();
+    virtual ~Menu();
 
-    protected:
+protected:
 
-    private:
+private:
 };
 
 #endif // MENU_H

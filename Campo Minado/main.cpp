@@ -11,6 +11,6 @@ using namespace std;
 int main()
 {
     Menu menu;
-    menu.inicio();
+    menu.first_screen();
 
 }
